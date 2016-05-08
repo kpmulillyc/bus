@@ -1,0 +1,51 @@
+/*!
+ * Start Bootstrap - Logo Nav HTML Template (http://startbootstrap.com)
+ * Code licensed under the Apache License v2.0.
+ * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+ */
+
+body {
+    padding-top: 70px; /* Required padding for .navbar-fixed-top. Change if height of navigation changes. */
+}
+
+.navbar-fixed-top .nav {
+    padding: 15px 0;
+}
+
+.navbar-fixed-top .navbar-brand {
+    padding: 0 15px;
+}
+
+@media(min-width:768px) {
+    body {
+        padding-top: 100px; /* Required padding for .navbar-fixed-top. Change if height of navigation changes. */
+    }
+
+    .navbar-fixed-top .navbar-brand {
+        padding: 15px 0;
+    }
+}
+#circle {
+    background: white;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    color:black;
+	margin-top:50px;
+	margin-bottom:30px;
+    text-align:center;
+    border: solid 7px black;
+    font-family:Segoe UI Light;
+    box-shadow:0px 0px 5px black;
+  cursor:pointer;
+}
+#circle .innerTEXT{
+  position:relative;
+  top:50px;
+  left:-2px;
+  color:black;
+  font-size: 30px;
+  font-weight: bold;
+  text-shadow:2px 2px 2px black;
+}
+
