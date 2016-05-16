@@ -1,5 +1,7 @@
 #coding=utf-8
 from flask import render_template, Flask
+from ics import icalendar
+from urllib.request import urlopen
 import datetime,time
 import sys
 defaultencoding = 'utf-8'
@@ -57,7 +59,19 @@ def calAll(x):
        u+=1
     return temp
 
-
+def isHoliday():
+    url = 'http://www.1823.gov.hk/common/ical/tc.ics'
+    c = icalendar.Calendar(urlopen(url).read().decode('utf-8'))
+    e= icalendar.Event()
+    result = False
+    today = datetime.date.today()
+    e.begin = today.strftime("%Y%m%d") + " 00:00:00"
+    print (e.begin)
+    for i in c.events:
+        if e.begin == i.begin:
+            result = True
+            break
+    return result
 
 def preBus(x):
     temp = min(n for n in calAll(x) if n > 0)
