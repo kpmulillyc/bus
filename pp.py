@@ -66,11 +66,12 @@ def isHoliday():
     result = False
     today = datetime.date.today()
     e.begin = today.strftime("%Y%m%d") + " 00:00:00"
-    print (e.begin)
     for i in c.events:
         if e.begin == i.begin:
             result = True
             break
+    if today.weekday() == 6:
+        result = True
     return result
 
 def preBus(x):
