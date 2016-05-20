@@ -27,7 +27,7 @@
 <body>
 
     <!-- Navigation -->
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -44,29 +44,14 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-				  <li class="dropdown" id="1">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#">銅鑼灣
-					<span class="caret"></span></a>
-					<ul class="dropdown-menu">
-					  <li class="cwb"><a href="/cwb">平日</a></li>
-					  <li class="cwbh"><a href="/cwbh">週日與假期</a></li>
-					</ul>
+				  <li>
+					<a href="/cwb"><font size="5px">銅鑼灣</font></a>
+				  </li>
+					<li>
+					<a href="/northpoint"><font size="5px">北角</font></a>
 					</li>
-					<li class="dropdown">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#">北角
-					<span class="caret"></span></a>
-					<ul class="dropdown-menu">
-					  <li><a href="/northpoint">平日</a></li>
-					  <li><a href="/northpointh">週日與假期</a></li>
-					</ul>
-					</li>
-					<li class="dropdown">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#">太古
-					<span class="caret"></span></a>
-					<ul class="dropdown-menu">
-					  <li><a href="/taikoo">平日</a></li>
-					  <li><a href="/taikooh">週日與假期</a></li>
-					</ul>
+					<li>
+					<a href="/taikoo"><font size="5px">太古</font></a>
 					</li>
                 </ul>
             </div>
@@ -74,12 +59,48 @@
         </div>
         <!-- /.container -->
     </nav>
-	<p></p>
-	<p></p>
-	<p></p>
-	<p></p>
-	<p></p>
-<h5> Weclome to beta
+<div class="container">
+    <p></p>
+
+    <p><font size="6px">下一班由寶馬山花園開出的巴士為</font></p>
+    {% if title == "cwb" %}
+	<div id="circle" class="col-xs-6">
+    <span class="innerTEXT"><font color="red"> 銅鑼灣 </font></span>
+	</div>
+    {% elif title == "np" %}
+	<div id="circle" class="col-xs-6">
+    <span class="innerTEXT"><font color="red"> 北角 </font></span>
+	</div>
+    {% elif title == "tk" %}
+	<div id="circle" class="col-xs-6">
+    <span class="innerTEXT"><font color="red"> 太古 </font></span>
+	</div>
+    {% elif title == "all" %}
+	<div id="circle" class="col-xs-6">
+    <span class="innerTEXT"><font color="red" size="5px"> 銅鑼灣,北角,太古 </font></span>
+	</div>
+    {% elif title == "cn" %}
+	<div id="circle" class="col-xs-6">
+    <span class="innerTEXT"><font color="red"> 銅鑼灣, 北角 </font></span>
+	</div>
+    {% elif title == "nt" %}
+	<div id="circle" class="col-xs-6">
+    <span class="innerTEXT"><font color="red"> 北角,太古 </font></span>
+	</div>
+    {% elif title == "ct" %}
+	<div id="circle" class="col-xs-6">
+    <span class="innerTEXT"><font color="red"> 銅鑼灣, 太古 </font></span>
+	</div>
+    {% endif %}
+
+	<div id="circle" class="col-xs-6">
+    <span class="innerTEXT"><font color="lime"> {{ Next }} </font></span>
+</div>
+	  <table class="table">
+
+	  </table>
+	</div>
+ <div class="container">
     <!-- Page Content -->
 
     <!-- /.container -->

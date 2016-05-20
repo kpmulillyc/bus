@@ -45,29 +45,14 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-				  <li class="dropdown" id="1">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#">銅鑼灣
-					<span class="caret"></span></a>
-					<ul class="dropdown-menu">
-					  <li class="cwb"><a href="/cwb">平日</a></li>
-					  <li class="cwbh"><a href="/cwbh">週日與假期</a></li>
-					</ul>
+				  <li>
+					<a href="/cwb"><font size="5px">銅鑼灣</font></a>
+				  </li>
+					<li>
+					<a href="/northpoint"><font size="5px">北角</font></a>
 					</li>
-					<li class="dropdown">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#">北角
-					<span class="caret"></span></a>
-					<ul class="dropdown-menu">
-					  <li><a href="/northpoint">平日</a></li>
-					  <li><a href="/northpointh">週日與假期</a></li>
-					</ul>
-					</li>
-					<li class="dropdown">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#">太古
-					<span class="caret"></span></a>
-					<ul class="dropdown-menu">
-					  <li><a href="/taikoo">平日</a></li>
-					  <li><a href="/taikooh">週日與假期</a></li>
-					</ul>
+					<li>
+					<a href="/taikoo"><font size="5px">太古</font></a>
 					</li>
                 </ul>
             </div>
@@ -211,29 +196,14 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-				  <li class="dropdown" id="1">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#">銅鑼灣
-					<span class="caret"></span></a>
-					<ul class="dropdown-menu">
-					  <li class="/cwb"><a href="/cwb">平日</a></li>
-					  <li class="/cwbh"><a href="/cwbh">週日與假期</a></li>
-					</ul>
+				  <li>
+					<a href="/cwb"><font size="5px">銅鑼灣</font></a>
+				  </li>
+					<li>
+					<a href="/northpoint"><font size="5px">北角</font></a>
 					</li>
-					<li class="dropdown">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#">北角
-					<span class="caret"></span></a>
-					<ul class="dropdown-menu">
-					  <li><a href="/northpoint">平日</a></li>
-					  <li><a href="/northpointh">週日與假期</a></li>
-					</ul>
-					</li>
-					<li class="dropdown">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#">太古
-					<span class="caret"></span></a>
-					<ul class="dropdown-menu">
-					  <li><a href="/taikoo">平日</a></li>
-					  <li><a href="/taikooh">週日與假期</a></li>
-					</ul>
+					<li>
+					<a href="/taikoo"><font size="5px">太古</font></a>
 					</li>
                 </ul>
             </div>
@@ -249,7 +219,7 @@
 	</div>
 
 	<div id="circle" class="col-xs-6">
-    <span class="innerTEXT"><font color="lime"> 明天請早 </font></span>
+    <span class="innerTEXT"><font color="lime"> {{ Next }} </font></span>
 </div>
 	  <table class="table">
  
@@ -266,6 +236,11 @@
 </thead>
 <tbody>
 {% for i in table[:25] %}
+{% if i == Next %}
+<tr>
+<td align="center" bgcolor="lime">{{ i }}</td>
+</tr>
+{% endif %}
 <tr>
 <td class="{{ loop.cycle('info', '') }}" align="center">{{ i }}</td>
 </tr>
