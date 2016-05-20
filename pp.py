@@ -2,7 +2,7 @@
 from flask import render_template, Flask
 from ics import icalendar
 from urllib.request import urlopen
-import datetime,time
+import datetime
 import sys
 defaultencoding = 'utf-8'
 if sys.getdefaultencoding() != defaultencoding:
@@ -90,58 +90,244 @@ def printPrev(x):
 
 def timeRange(x):
     temp = datetime.datetime.now().time()
-    if temp >= datetime.time(7,30) and temp < timeTable(x[len(x)-1]):
-        return True
+    if temp >= timeTable('00:00') and temp < timeTable(x[0]):
+        return 1
+    elif temp > timeTable(x[0]) and temp < timeTable(x[len(x)-1]):
+        return 2
     else:
-        return False
+        return 3
+
+def tmrIsHoliday():
+    url = 'http://www.1823.gov.hk/common/ical/tc.ics'
+    c = icalendar.Calendar(urlopen(url).read().decode('utf-8'))
+    e= icalendar.Event()
+    result = False
+    today = datetime.date.today()
+    tomorrow = today + datetime.timedelta(1)
+    e.begin = tomorrow.strftime("%Y%m%d") + " 00:00:00"
+    for i in c.events:
+        if e.begin == i.begin:
+            result = True
+            break
+    if today.weekday() == 5:
+        result = True
+    return result
+
+def nearestBustime():
+    if isHoliday() is False:
+        if timeRange(cwb) is 2:
+            x = printNext(cwb)
+        else:
+            x = '23:59'
+        if timeRange(np) is 2:
+            y = printNext(np)
+        else:
+            y = '23:59'
+        if timeRange(tk) is 2:
+            z = printNext(tk)
+        else:
+            z = '23:59'
+        minimum = min(x,y,z)
+        if x == y ==  z:
+            return cwb
+        elif x is y <= minimum:
+            return cwb
+        elif y is z <= minimum:
+            return np
+        elif x is z <= minimum:
+            return cwb
+        elif minimum is x:
+            return cwb
+        elif minimum is y:
+            return np
+        else:
+            return tk
+    else:
+        if timeRange(cwbh) is 2:
+            x = printNext(cwbh)
+        else:
+            x = '23:59'
+        if timeRange(nph) is 2:
+            y = printNext(nph)
+        else:
+            y = '23:59'
+        if timeRange(tkh) is 2:
+            z = printNext(tkh)
+        else:
+            z = '23:59'
+        minimum = min(x,y,z)
+        if x == y == z:
+            return cwbh
+        elif x is y <= minimum:
+            return cwbh
+        elif y is z <= minimum:
+            return nph
+        elif x is z <= minimum:
+            return cwbh
+        elif minimum is x:
+            return cwbh
+        elif minimum is y:
+            return nph
+        else:
+            return tkh
+
+def nearestBusName():
+    if isHoliday() is False:
+        if timeRange(cwb) is 2:
+            x = printNext(cwb)
+        else:
+            x = '23:59'
+        if timeRange(np) is 2:
+            y = printNext(np)
+        else:
+            y = '23:59'
+        if timeRange(tk) is 2:
+            z = printNext(tk)
+        else:
+            z = '23:59'
+        minimum = min(x, y, z)
+        if x == y ==  z:
+            return "all"
+        elif x is y <= minimum:
+            return "cn"
+        elif y is z <= minimum:
+            return "nt"
+        elif x is z <= minimum:
+            return "ct"
+        elif minimum is x:
+            return "cwb"
+        elif minimum is y:
+            return "np"
+        else:
+            return "tk"
+    else:
+        if timeRange(cwbh) is 2:
+            x = printNext(cwbh)
+        else:
+            x = '23:59'
+        if timeRange(nph) is 2:
+            y = printNext(nph)
+        else:
+            y = '23:59'
+        if timeRange(tkh) is 2:
+            z = printNext(tkh)
+        else:
+            z = '23:59'
+        minimum = min(x, y, z)
+        if x == y == z:
+            return "all"
+        elif x is y <= minimum:
+            return "cn"
+        elif y is z <= minimum:
+            return "nt"
+        elif x is z <= minimum:
+            return "ct"
+        elif minimum is x:
+            return "cwb"
+        elif minimum is y:
+            return "np"
+        else:
+            return "tk"
 
 app = Flask(__name__)
-
 @app.route('/')
 def hello_world():
-    return render_template("index.html")
+    if isHoliday() is False:
+        if timeRange(cwb) is 1:
+            return render_template("index.html", Next = cwb[0], title = "all")
+        elif timeRange(cwb) is 2:
+            return render_template("index.html", Next = printNext(nearestBustime()), title = nearestBusName())
+        else:
+            if tmrIsHoliday() is True:
+                return render_template("index.html", Next = cwbh[0], title = "cwb")
+            else:
+                return render_template("index.html", Next = cwb[0], title = "all")
+    else:
+        if timeRange(cwbh) is 1:
+            return render_template("index.html", Next=cwbh[0], title="cwb")
+        elif timeRange(cwbh) is 2:
+            return render_template("index.html", Next=printNext(nearestBustime()), title=nearestBusName())
+        else:
+            if tmrIsHoliday() is True:
+                return render_template("index.html", Next=cwbh[0], title="cwb")
+            else:
+                return render_template("index.html", Next=cwb[0], title="all")
 
 @app.route('/cwb')
 def cwbr():
-    if timeRange(cwb) == True:
-        return render_template("cwb.html",table = cwb, tableTit = "銅鑼灣平日時間表", Prev = printPrev(cwb), Next = printNext(cwb), check = timeRange(cwb) )
+    if isHoliday() is False:
+        if timeRange(cwb) is 1:
+            return render_template("cwb.html", table = cwb, tableTit = "銅鑼灣平日時間表", check = False, Next = cwb[0])
+        elif timeRange(cwb) is 2:
+            return render_template("cwb.html", table = cwb, tableTit = "銅鑼灣平日時間表", Prev = printPrev(cwb), Next = printNext(cwb), check = True)
+        else:
+            if tmrIsHoliday() is True:
+                return render_template("cwb.html", check = False, table = cwbh, tableTit = "銅鑼灣假日時間表", Next = cwbh[0])
+            else:
+                return render_template("cwb.html", check = False, table = cwb, tableTit = "銅鑼灣平日時間表", Next = cwb[0])
     else:
-        return render_template("cwb.html",check = timeRange(cwb), table= cwb , tableTit ="銅鑼灣平日時間表")
-
-@app.route('/cwbh')
-def cwbhr():
-    if timeRange(cwbh) == True:
-        return render_template("cwbh.html",table = cwbh, tableTit = "銅鑼灣假日時間表", Prev = printPrev(cwbh), Next = printNext(cwbh), check = timeRange(cwbh))
-    else:
-        return render_template("cwbh.html",check = timeRange(cwbh), table= cwbh , tableTit ="鑼灣假日時間表")
+        if timeRange(cwbh) is 1:
+            return render_template("cwb.html", table=cwbh, tableTit="銅鑼灣假日時間表", check=False, Next=cwbh[0])
+        elif timeRange(cwbh) is 2:
+            return render_template("cwb.html", table=cwbh, tableTit="銅鑼灣假日時間表", Prev=printPrev(cwbh), Next=printNext(cwbh),
+                                   check=True)
+        else:
+            if tmrIsHoliday() is True:
+                return render_template("cwb.html", check=False, table=cwbh, tableTit="銅鑼灣假日時間表", Next=cwbh[0])
+            else:
+                return render_template("cwb.html", check=False, table=cwb, tableTit="銅鑼灣平日時間表", Next=cwb[0])
 
 @app.route('/northpoint')
 def npr():
-    if timeRange(np) == True:
-        return render_template("np.html",table = np, tableTit = "北角平日時間表", Prev = printPrev(np), Next = printNext(np), check = timeRange(np))
+    if isHoliday() is False:
+        if timeRange(np) is 1:
+            return render_template("np.html", table=np, tableTit="北角平日時間表", check=False, Next=np[0])
+        elif timeRange(np) is 2:
+            return render_template("np.html", table=np, tableTit="北角平日時間表", Prev=printPrev(np), Next=printNext(np),
+                                   check=True)
+        else:
+            if tmrIsHoliday() is True:
+                return render_template("np.html", check=False, table=nph, tableTit="北角假日時間表", Next=nph[0])
+            else:
+                return render_template("np.html", check=False, table=np, tableTit="北角平日時間表", Next=np[0])
     else:
-        return render_template("np.html",check = timeRange(np), table= np , tableTit ="北角平日時間表")
-
-@app.route('/northpointh')
-def nphr():
-    if timeRange(nph) == True:
-        return render_template("nph.html",table = nph, tableTit = "北角假日時間表", Prev = printPrev(nph), Next = printNext(nph), check = timeRange(nph))
-    else:
-        return render_template("nph.html", check=timeRange(nph), table=nph, tableTit="北角假日時間表")
+        if timeRange(nph) is 1:
+            return render_template("np.html", table=nph, tableTit="北角假日時間表", check=False, Next=nph[0])
+        elif timeRange(nph) is 2:
+            return render_template("np.html", table=nph, tableTit="北角假日時間表", Prev=printPrev(nph),
+                                   Next=printNext(nph),
+                                   check=True)
+        else:
+            if tmrIsHoliday() is True:
+                return render_template("np.html", check=False, table=nph, tableTit="北角假日時間表", Next=nph[0])
+            else:
+                return render_template("np.html", check=False, table=np, tableTit="北角平日時間表", Next=np[0])
 
 @app.route('/taikoo')
 def tkr():
-    if timeRange(tk) == True:
-        return render_template("tk.html",table = tk, tableTit = "太古平日時間表", Prev = printPrev(tk), Next = printNext(tk), check = timeRange(tk))
+    if isHoliday() is False:
+        if timeRange(tk) is 1:
+            return render_template("tk.html", table=tk, tableTit="太古平日時間表", check=False, Next=tk[0])
+        elif timeRange(tk) is 2:
+            return render_template("tk.html", table=tk, tableTit="太古平日時間表", Prev=printPrev(tk), Next=printNext(tk),
+                                   check=True)
+        else:
+            if tmrIsHoliday() is True:
+                return render_template("tk.html", check=False, table=tkh, tableTit="太古假日時間表", Next=tkh[0])
+            else:
+                return render_template("tk.html", check=False, table=tk, tableTit="太古平日時間表", Next=tk[0])
     else:
-        return render_template("tk.html", check=timeRange(tk), table=tk, tableTit="太古平日時間表")
-
-@app.route('/taikooh')
-def tkhr():
-    if timeRange(tkh) == True:
-        return render_template("tkh.html",table = tkh, tableTit = "太古假日時間表", Prev = printPrev(tkh), Next = printNext(tkh), check = timeRange(tkh))
-    else:
-        return render_template("tkh.html", check=timeRange(tkh), table=tkh, tableTit="太古假日時間表")
+        if timeRange(tkh) is 1:
+            return render_template("tk.html", table=tkh, tableTit="太古假日時間表", check=False, Next=tkh[0])
+        elif timeRange(tkh) is 2:
+            return render_template("tk.html", table=tkh, tableTit="太古假日時間表", Prev=printPrev(tkh),
+                                   Next=printNext(tkh),
+                                   check=True)
+        else:
+            if tmrIsHoliday() is True:
+                return render_template("tk.html", check=False, table=tkh, tableTit="太古假日時間表", Next=tkh[0])
+            else:
+                return render_template("tk.html", check=False, table=tk, tableTit="太古平日時間表", Next=tk[0])
 
 if __name__ == '__main__':
     app.run()
